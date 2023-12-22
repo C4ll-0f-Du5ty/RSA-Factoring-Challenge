@@ -1,29 +1,27 @@
-import sys
-import math
+import os
+import time
 
-def factorize(n):
-    # Check if the number is even
-    if n % 2 == 0:
-        return 2, n // 2
+def prime_factors(n):
+    i = 2
+    factors = []
+    while i * i <= n:
+        if n % i:
+            i += 1
+        else:
+            n //= i
+            factors.append(i)
+    if n > 1:
+        factors.append(n)
+    return factors
 
-    # If the number is not even, start checking odd numbers
-    for i in range(3, math.isqrt(n) + 1, 2):
-        if n % i == 0:
-            return i, n // i
-
-    # If no factor found, the number is a prime
-    return n, 1
-
-def main():
-    # Open the file
-    with open(sys.argv[1], 'r') as file:
-        for line in file:
-            # Read each line (number)
-            n = int(line.strip())
-            # Factorize the number
-            p, q = factorize(n)
-            # Print the result
-            print(f"{n}={p}*{q}")
-
-if __name__ == "__main__":
-    main()
+def factor_rsa_files(directory):
+    start_time = time.time()
+    for filename in os.listdir(directory):
+        if filename.startswith("rsa-"):
+            with open(os.path.join(directory, filename), 'r') as file:
+                n = int(file.read())
+                factors = prime_factors(n)
+                print(f"{filename}: {n} = {factors[0]}*{factors[1]}")
+                if time.time() - start_time > 5:
+                    print("5 seconds have passed. Stopping...")
+                    break
