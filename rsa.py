@@ -1,44 +1,29 @@
 import sys
 import math
 
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
+def factorize(n):
+    # Check if the number is even
+    if n % 2 == 0:
+        return 2, n // 2
 
-def pollards_rho(n):
-    x = 2
-    y = 2
-    d = 1
-    f = lambda x: (x**2 + 1) % n
+    # If the number is not even, start checking odd numbers
+    for i in range(3, math.isqrt(n) + 1, 2):
+        if n % i == 0:
+            return i, n // i
 
-    while d == 1:
-        x = f(x)
-        y = f(f(y))
-        d = gcd(abs(x - y), n)
-
-    return d
-
-def factorize_rsa_number(n):
-    factors = []
-    while n > 1:
-        factor = pollards_rho(n)
-        while n % factor == 0:
-            factors.append(factor)
-            n //= factor
-
-    return factors
+    # If no factor found, the number is a prime
+    return n, 1
 
 def main():
-    try:
-        filename = sys.argv[1]
-        with open(filename) as file:
-            for line in file:
-                n = int(line.strip())
-                factors = factorize_rsa_number(n)
-                print(f"{n}={'*'.join(map(str, factors))}")
-    except (IndexError, FileNotFoundError):
-        print("Usage: python rsa.py <filename>")
+    # Open the file
+    with open(sys.argv[1], 'r') as file:
+        for line in file:
+            # Read each line (number)
+            n = int(line.strip())
+            # Factorize the number
+            p, q = factorize(n)
+            # Print the result
+            print(f"{n}={p}*{q}")
 
 if __name__ == "__main__":
     main()
