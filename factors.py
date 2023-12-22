@@ -14,8 +14,8 @@ def fc():
             for revnumber in f:
                 revnumber = int(revnumber)
                 if revnumber % 2 == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // 2, 2))
-                        continue
+                    print("{}={}*{}".format(revnumber, revnumber // 2, 2))
+                    continue
                 i = 3
                 while i < revnumber // 2:
                     if revnumber % i == 0:
